@@ -7,11 +7,15 @@ var tootMap = {
     modal_flg: localStorage.getItem('modal_flg') ? localStorage.getItem('modal_flg') : null,
 
     // 非同期HTTPリクエスト
-    httpRequest: function(url, method, header, data, callback) {
+    httpRequest: function(url, method, header, data, callback, error) {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                callback(this.responseText);
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    callback(this.responseText);
+                } else {
+                    error(this.responseText);
+                }
             }
         }
         xhr.open(method, url, true);
@@ -30,6 +34,25 @@ var tootMap = {
         watch_id: null,
         now_geo_marker: null,
 
+        // 現在位置のマーカを表示する（無ければ無印マーカ）
+        displayPositionMarker: function(latLng) {
+            just_marker=null;
+            for( i=0;i<this.markers.length; i++ ) {
+                if(this.markers[i].position.equals(latLng)) {
+                    just_marker = this.markers[i];
+                    break;
+                }
+            }
+            if (just_marker) {
+                google.maps.event.trigger(just_marker, 'click');
+            } else {
+                new google.maps.Marker({
+                    position: this.map.getCenter(),
+                    map: this.map,
+                    icon: './nowgeo-icon.png'
+                });
+            }
+        },
         // 現在位置をマップ内に表示
         showNowGeo: function() {
             if (navigator.geolocation) {
@@ -91,6 +114,8 @@ var tootMap = {
                     bounds.extend(marker.getPosition());
                 });
                 this.map.fitBounds(bounds);
+            } else {
+                this.displayPositionMarker(this.map.getCenter());                
             }
         },
         clearMarkers: function() {
@@ -277,12 +302,14 @@ var tootMap = {
                                 });});
 
                                 // カスタム絵文字変換
-                                toot['emojis'].forEach(function(emoji) {
-                                    var r = new RegExp(":"+emoji['shortcode']+":");
-                                    while (toot['content'].match(r)) {
-                                        toot['content'] = toot['content'].replace(r, '<img draggable="false" class="emojione" alt="'+emoji['shortcode']+'" title="'+emoji['shortcode']+'" src="'+emoji['url']+'">');
-                                    }
-                                });
+                                if (typeof(toot['emojis'])!="undefined") {
+                                    toot['emojis'].forEach(function(emoji) {
+                                        var r = new RegExp(":"+emoji['shortcode']+":");
+                                        while (toot['content'].match(r)) {
+                                            toot['content'] = toot['content'].replace(r, '<img draggable="false" class="emojione" alt="'+emoji['shortcode']+'" title="'+emoji['shortcode']+'" src="'+emoji['url']+'">');
+                                        }
+                                    });
+                                }
 
                                 toot['innerHTML'] = tootMap.mstdn.timeline.innerHTML(toot);
 
@@ -299,6 +326,10 @@ var tootMap = {
                         tootMap.mstdn.timeline.setLastDate(last_toot['created_at']);
                     }
         
+                    tootMap.hideLoader();
+                },
+                function(responseText) {
+                    alert("タイムラインを取得できませんでした");
                     tootMap.hideLoader();
                 });
                 tootMap.displayLoader();
@@ -335,7 +366,7 @@ var tootMap = {
 
             if (this.value.length > 0) {
                 tootMap.mstdn.setDomain(this.value);
-                tootMap.refresh();
+                tootMap.refresh(false);
                 tootMap.showMap();
             } else {
                 alert("有効なドメインを入力してください");
@@ -351,7 +382,7 @@ var tootMap = {
 
             if (this.value.length > 0) {
                 tootMap.mstdn.timeline.setTag(this.value);
-                tootMap.refresh();
+                tootMap.refresh(false);
                 tootMap.showMap();
             } else {
                 alert("有効なタグを入力してください");
@@ -360,14 +391,14 @@ var tootMap = {
         });
     },
 
-    refresh: function() {
+    refresh: function(params_flg) {
         $('#domain-tag').text(tootMap.mstdn.domain+"#"+tootMap.mstdn.timeline.tag);
         $('#tagtl').attr("href", "https://"+tootMap.mstdn.domain+"/tags/"+tootMap.mstdn.timeline.tag);
 
         tootMap.gmap.clearMarkers();
         tootMap.mstdn.timeline.clear();
 
-        tootMap.mstdn.timeline.get(false);
+        tootMap.mstdn.timeline.get(params_flg);
     },
 
     // GET引数
@@ -392,6 +423,7 @@ var tootMap = {
             this.lng = parseFloat(this._get('lng', /^\d+\.\d+$/, 136.067194));
             this.zoom = parseInt(this._get('zoom', /^\d+$/, 10));
             this.tag = this._get('tag', /^[\w]+/, "biwakomap");
+            return this._get('lat')!=null;
         }
     },
 
@@ -408,7 +440,6 @@ var tootMap = {
         $("#setting").show();
     },
     showMap: function() {
-        localStorage.clear();
         $("#setting").hide();
         $("#map").show();
     },
@@ -473,18 +504,18 @@ var tootMap = {
     },
 
     initialize: function() {
-        this.params.get();
+        var params_flg = this.params.get();
         this.mstdn.timeline.setTag(this.params.tag);
         this.gmap.init();
         if (!this.modal_flg) {
             this.displayModal(function() {
-                tootMap.refresh();
+                tootMap.refresh(params_flg);
                 tootMap.menuInit();
 
                 localStorage.setItem("modal_flg", 1);
             });
         } else {
-            this.mstdn.timeline.get(false);
+            this.mstdn.timeline.get(params_flg);
             this.menuInit();
         }
     }
