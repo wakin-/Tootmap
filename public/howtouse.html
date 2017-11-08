@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:site_name" content="Tootmap">
+    <meta property="og:title" content="Tootmap">
+    <meta property="og:description" content="マストドンのトゥートに位置情報を付加し、GoogleMapに表示します。">
+    <meta property="og:type" content="place">
+    <link href='/apple-touch-icon.png' rel='apple-touch-icon' sizes='180x180'>
+    <meta property="og:url" content="https://tootmap.net/">
+    <meta property="og:image" content="https://tootmap.net/og_image.png">
+    <meta content="1200" property="og:image:width" />
+    <meta content="630" property="og:image:height" />    
+    <meta content="summary_large_image" property="twitter:card" />
+    <link href="./favicon.ico" rel="icon" type="image/x-icon">
+    <title>このページについて - Tootmap</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="manifest" href="/manifest.json">
+  </head>
+  <body>
+        <main role="main" class="container">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div>
+                        <h1>このページについて</h1>
+                        <h2>このページは？</h2>
+                        <p>マストドンのトゥートに位置情報を付加し、GoogleMapに表示します。</p>
+                        <h2>使い方は？</h2>
+                        <ol>
+                            <li>メニューの mstdn://[ マストドンのドメイン ]#[ ハッシュタグ ] を入力してください。</li>
+                            <li>地図中をクリック（タップ）し、「この位置についてトゥートする」を選択してください。</li>
+                            <li>位置情報の付加されたマストドンの投稿画面が開きます。</li>
+                        </ol>
+                        <h2>現在位置でトゥート</h2>
+                        <p>メニューの「現在位置を表示」を選択すると端末の現在位置が地図上に表示されます。</p>
+                        <h2>利用される上での注意点</h2>
+                        <ul>
+                            <li>公開範囲を「公開」で投稿されたものがTootmapに表示されます。</li>
+                            <li>投稿はマストドンのVer1.6以上が対応しています。</li>
+                            <li><em>位置情報は個人情報と直結する可能性のある情報になります。トゥートされる際はその点を十分ご留意ください。</em>トゥートを削除することでマップの表示は消えますが、外部の検索エンジンに位置情報と含んだトゥートがキャッシュされて残る場合があります。</li>
+                        </ul>
+                        <h2>Githubでソースを公開しています</h2>
+                        <p><a target="_blank" href="https://github.com/wakin-/Tootmap">https://github.com/wakin-/Tootmap</a></p>
+                        <h2>作成者</h2>
+                        <p><a href="https://biwakodon.com/@wakin" target="_blank">@wakin</a></p>
+                        <h2>協力者</h2>
+                        <p><a href="https://mastodos.com/@7_nana" target="_blank">@7_nana</a>（画像、アイコン）</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script src="./sw.js"></script>
+  </body>
+</html>

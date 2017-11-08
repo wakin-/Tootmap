@@ -1,0 +1,7 @@
+node_modules
+public/index.html
+public/index.js
+public/manifest.json
+.vscode
+.firebaserc
+firebase.json
