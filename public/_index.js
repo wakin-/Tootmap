@@ -103,7 +103,7 @@ var tootMap = {
             }
             return marker;
         },
-        setupMarkers: function(toot_list, bounds_flg) {
+        setupMarkers: function(toot_list, bounds_flg, position_flg) {
             toot_list.forEach(function(toot) {
                 tootMap.gmap.markers.push(tootMap.gmap.createMarker(toot['position'], toot['innerHTML']));
             });
@@ -114,8 +114,9 @@ var tootMap = {
                     bounds.extend(marker.getPosition());
                 });
                 this.map.fitBounds(bounds);
-            } else {
-                this.displayPositionMarker(this.map.getCenter());                
+            }
+            if (position_flg) {
+                this.displayPositionMarker(this.map.getCenter());
             }
         },
         clearMarkers: function() {
@@ -264,7 +265,7 @@ var tootMap = {
                 return match;
             },
             // タイムラインの取得
-            get: function(add_flg) {
+            get: function(bounds_flg, position_flg) {
                 var url = "https://"+tootMap.mstdn.domain+"/api/v1/timelines/tag/"+encodeURIComponent(tootMap.mstdn.timeline.tag)+"?limit="+tootMap.mstdn.timeline.limit+"&max_id="+tootMap.mstdn.timeline.max_id;
                 var method = "GET";
                 var header = {};
@@ -274,7 +275,7 @@ var tootMap = {
                         var toot_list = [];
 
                         if (responseText.length == 0) {
-                            tootMap.mstdn.timeline.get(add_flg);
+                            tootMap.mstdn.timeline.get(bounds_flg, position_flg);
                             return;
                         }
 
@@ -318,7 +319,7 @@ var tootMap = {
                         }
                     );
 
-                    tootMap.gmap.setupMarkers(toot_list, !add_flg);
+                    tootMap.gmap.setupMarkers(toot_list, bounds_flg, position_flg);
 
                     if (arr.length) {
                         var last_toot = arr.getLastVal();
@@ -354,7 +355,7 @@ var tootMap = {
             tootMap.showMap();
         });
         $("body").on('click', '#past-tagtl', function() {
-            tootMap.mstdn.timeline.get(true);
+            tootMap.mstdn.timeline.get(false, false);
             tootMap.showMap();
         });
         $("body").on('change', '#domain', function() {
@@ -366,7 +367,7 @@ var tootMap = {
 
             if (this.value.length > 0) {
                 tootMap.mstdn.setDomain(this.value);
-                tootMap.refresh(false);
+                tootMap.refresh(true, false);
                 tootMap.showMap();
             } else {
                 alert("有効なドメインを入力してください");
@@ -382,7 +383,7 @@ var tootMap = {
 
             if (this.value.length > 0) {
                 tootMap.mstdn.timeline.setTag(this.value);
-                tootMap.refresh(false);
+                tootMap.refresh(true, false);
                 tootMap.showMap();
             } else {
                 alert("有効なタグを入力してください");
@@ -391,14 +392,14 @@ var tootMap = {
         });
     },
 
-    refresh: function(params_flg) {
+    refresh: function(bounds_flg, position_flg) {
         $('#domain-tag').text(tootMap.mstdn.domain+"#"+tootMap.mstdn.timeline.tag);
         $('#tagtl').attr("href", "https://"+tootMap.mstdn.domain+"/tags/"+tootMap.mstdn.timeline.tag);
 
         tootMap.gmap.clearMarkers();
         tootMap.mstdn.timeline.clear();
 
-        tootMap.mstdn.timeline.get(params_flg);
+        tootMap.mstdn.timeline.get(bounds_flg, position_flg);
     },
 
     // GET引数
@@ -509,13 +510,13 @@ var tootMap = {
         this.gmap.init();
         if (!this.modal_flg) {
             this.displayModal(function() {
-                tootMap.refresh(params_flg);
+                tootMap.refresh(!params_flg, param_flg);
                 tootMap.menuInit();
 
                 localStorage.setItem("modal_flg", 1);
             });
         } else {
-            this.mstdn.timeline.get(params_flg);
+            this.mstdn.timeline.get(!params_flg, params_flg);
             this.menuInit();
         }
     }
