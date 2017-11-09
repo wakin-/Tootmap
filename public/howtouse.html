@@ -30,7 +30,7 @@
                         <p>マストドンのトゥートに位置情報を付加し、GoogleMapに表示します。</p>
                         <h2>使い方は？</h2>
                         <ol>
-                            <li>メニューの mstdn://[ マストドンのドメイン ]#[ ハッシュタグ ] を入力してください。</li>
+                            <li>メニューの https://[ マストドンのドメイン ]#[ ハッシュタグ ] を入力してください。</li>
                             <li>地図中をクリック（タップ）し、「この位置についてトゥートする」を選択してください。</li>
                             <li>位置情報の付加されたマストドンの投稿画面が開きます。</li>
                         </ol>
@@ -38,12 +38,13 @@
                         <p>メニューの「現在位置を表示」を選択すると端末の現在位置が地図上に表示されます。</p>
                         <h2>利用される上での注意点</h2>
                         <ul>
-                            <li>公開範囲を「公開」で投稿されたものがTootmapに表示されます。</li>
-                            <li>投稿はマストドンのVer1.6以上が対応しています。</li>
-                            <li><em>位置情報は個人情報と直結する可能性のある情報になります。トゥートされる際はその点を十分ご留意ください。</em>トゥートを削除することでマップの表示は消えますが、外部の検索エンジンに位置情報と含んだトゥートがキャッシュされて残る場合があります。</li>
+                            <li>公開範囲を「公開」で投稿されたものが表示されます。</li>
+                            <li>投稿はマストドンのver.1.6以上が対応しています。</li>
+                            <li><strong>位置情報は個人情報と直結する可能性のある情報になります。トゥートされる際はその点を十分ご留意ください。</strong>トゥートを削除することでマップの表示は消えますが、外部の検索エンジンに位置情報と含んだトゥートがキャッシュされて残る場合があります。</li>
                         </ul>
                         <h2>Githubでソースを公開しています</h2>
                         <p><a target="_blank" href="https://github.com/wakin-/Tootmap">https://github.com/wakin-/Tootmap</a></p>
+                        <p>こうしてみては？ 等お待ちしています！</p>
                         <h2>作成者</h2>
                         <p><a href="https://biwakodon.com/@wakin" target="_blank">@wakin</a></p>
                         <h2>協力者</h2>
@@ -53,6 +54,7 @@
             </div>
         </main>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>    
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     <script src="./sw.js"></script>
   </body>
