@@ -128,7 +128,7 @@ var tootMap = {
         mappingText: function(latLng) {
             return "https://" + tootMap.map_domain + '?lat=' + latLng.lat() + '&lng=' + latLng.lng()
             + '&zoom=' + tootMap.gmap.map.zoom
-            + '&tag=' + tootMap.mstdn.timeline.tag
+            + '&tag=' + encodeURI(tootMap.mstdn.timeline.tag)
             + ' #' + tootMap.mstdn.timeline.tag;
         },
         mappingContent: function(latLng) {
@@ -423,7 +423,7 @@ var tootMap = {
             this.lat = parseFloat(this._get('lat', /^\d+\.\d+$/, 35.269452));
             this.lng = parseFloat(this._get('lng', /^\d+\.\d+$/, 136.067194));
             this.zoom = parseInt(this._get('zoom', /^\d+$/, 10));
-            this.tag = this._get('tag', /^[\w]+/, "biwakomap");
+            this.tag = this._get('tag', /^[\w\u30a0-\u30ff\u3040-\u309f\u30e0-\u9fcf]+$/, "biwakomap");
             return this._get('lat')!=null;
         }
     },
