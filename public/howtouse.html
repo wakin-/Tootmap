@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:site_name" content="Tootmap">
     <meta property="og:title" content="Tootmap">
@@ -14,48 +14,84 @@
     <meta content="1200" property="og:image:width" />
     <meta content="630" property="og:image:height" />    
     <meta content="summary_large_image" property="twitter:card" />
-    <link href="./favicon.ico" rel="icon" type="image/x-icon">
-    <title>このページについて - Tootmap</title>
+    <meta name="description" content="マストドンのトゥートに位置情報を付加し、GoogleMapに表示します。">
+    <meta name="author" content="wakin">
+    <link rel="icon" href="./favicon.ico">
+    <title>Tootmapとは - Tootmap</title>
+
+    <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <!-- Custom styles for this template -->
+    <link href="narrow-jumbotron.css" rel="stylesheet">
+
     <link rel="manifest" href="/manifest.json">
   </head>
+
   <body>
-        <main role="main" class="container">
-            <div class="row">
-                <div class="col-sm-8">
-                    <div>
-                        <h1>このページについて</h1>
-                        <h2>このページは？</h2>
-                        <p>マストドンのトゥートに位置情報を付加し、GoogleMapに表示します。</p>
-                        <h2>使い方は？</h2>
-                        <ol>
-                            <li>メニューの https://[ マストドンのドメイン ]#[ ハッシュタグ ] を入力してください。</li>
-                            <li>地図中をクリック（タップ）し、「この位置についてトゥートする」を選択してください。</li>
-                            <li>位置情報の付加されたマストドンの投稿画面が開きます。</li>
-                        </ol>
-                        <h2>現在位置でトゥート</h2>
-                        <p>メニューの「現在位置を表示」を選択すると端末の現在位置が地図上に表示されます。</p>
-                        <h2>利用される上での注意点</h2>
-                        <ul>
-                            <li>公開範囲を「公開」で投稿されたものが表示されます。</li>
-                            <li>投稿はマストドンのver.1.6以上が対応しています。</li>
-                            <li><strong>位置情報は個人情報と直結する可能性のある情報になります。トゥートされる際はその点を十分ご留意ください。</strong>トゥートを削除することでマップの表示は消えますが、外部の検索エンジンに位置情報と含んだトゥートがキャッシュされて残る場合があります。</li>
-                        </ul>
-                        <h2>Githubでソースを公開しています</h2>
-                        <p><a target="_blank" href="https://github.com/wakin-/Tootmap">https://github.com/wakin-/Tootmap</a></p>
-                        <p>こうしてみては？ 等お待ちしています！</p>
-                        <h2>作成者</h2>
-                        <p><a href="https://biwakodon.com/@wakin" target="_blank">@wakin</a></p>
-                        <h2>協力者</h2>
-                        <p><a href="https://mastodos.com/@7_nana" target="_blank">@7_nana</a>（画像、アイコン）</p>
-                    </div>
-                </div>
-            </div>
-        </main>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>    
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-    <script src="./sw.js"></script>
+
+    <div class="container">
+      <header class="header clearfix">
+        <h3 class="text-muted"><img src="pin_icon.png" alt="ロゴ" width="30" />Tootmap</h3>
+      </header>
+
+      <!-- Jumbotron -->
+      <div class="jumbotron">
+        <h1><i class="fa fa-map" aria-hidden="true"></i>Tootmapとは</h1>
+        <p class="lead">マストドンのトゥートに位置情報を付加し、GoogleMapに表示します。</p>
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-lg-12">
+          <h2><i class="fa fa-map-marker" aria-hidden="true"></i>使い方</h2>
+            <ol>
+             <li>マップ左上にある「ドメイン#ハッシュタグ」をクリック（タップ）してメニューを開きます</li>
+             <li>メニューの中の<mark>https://[ マストドンのドメイン ]#[ ハッシュタグ ]</mark>をそれぞれ入力します</li>
+             <li>メニューの中の「マップに戻る」をクリック（タップ）します</li>
+             <li>マップの任意の位置をクリック（タップ）し、「この位置についてトゥートする」を選択します</li>
+             <li>位置情報が付加されたマストドンの投稿画面が開きます</li>
+           </ol>
+        </div>
+        <div class="col-lg-12">
+          <h2><i class="fa fa-street-view" aria-hidden="true"></i>現在位置でトゥート</h2>
+          <ol>
+           <li>マップ左上にある「ドメイン#ハッシュタグ」をクリック（タップ）してメニューを開きます</li>
+           <li>メニュー中の「現在位置を表示」を選択します</li>
+           <li>現在位置がマップ上に表示されます</li>
+          </ol>
+       </div>
+        <div class="col-lg-12">
+          <h2><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>利用上の注意点</h2>
+          <ul>
+           <li>投稿のプライバシー設定を「公開」にしてトゥートされたものが表示されます</li>
+           <li>マストドンのver.1.6以上に対応しています</li>
+           <li><strong>位置情報は個人情報と直結する可能性があります。トゥートされる際はご注意ください。</strong>トゥートを削除するとマップの表示は消えますが、外部の検索エンジンに位置情報を含んだトゥートがキャッシュされて残る場合があります</li>
+          </ul>
+        </div>
+        <div class="col-lg-12">
+         <h2><i class="fa fa-code" aria-hidden="true"></i>ソースコード</h2>
+         <p>GitHubで公開しています。</p>
+         <p><i class="fa fa-github" aria-hidden="true"></i><a target="_blank" href="https://github.com/wakin-/Tootmap">https://github.com/wakin-/Tootmap<i class="fa fa-external-link" aria-hidden="true"></i></a></p>
+         <p>こうしてみては？等お待ちしています！</p>
+        </div>
+        <div class="col-lg-12">
+         <h2><i class="fa fa-user-circle-o" aria-hidden="true"></i>作成者</h2>
+         <p><a href="https://biwakodon.com/@wakin" target="_blank">@wakin<i class="fa fa-external-link" aria-hidden="true"></i></a></p>
+        </div>
+        <div class="col-lg-12">
+         <h2><i class="fa fa-users" aria-hidden="true"></i>協力者</h2>
+         <p><a href="https://mastodos.com/@7_nana" target="_blank">@7_nana<i class="fa fa-external-link" aria-hidden="true"></i></a>（画像、アイコン）</p>
+        </div>
+      </div>
+
+      <!-- Site footer -->
+      <footer class="footer">
+        <p>&copy; Tootmap 2017-</p>
+      </footer>
+
+    </div> <!-- /container -->
+
   </body>
 </html>

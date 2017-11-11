@@ -1,0 +1,157 @@
+/* Space out content a bit */
+body {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+/* Custom page header */
+.header {
+  padding-bottom: 1rem;
+  border-bottom: .05rem solid #e5e5e5;
+}
+
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 3rem;
+}
+
+/* Custom page footer */
+.footer {
+  padding-top: 1.5rem;
+  color: #777;
+  border-top: .05rem solid #e5e5e5;
+}
+
+/* Customize container */
+@media (min-width: 48em) {
+  .container {
+    max-width: 46rem;
+  }
+}
+.container-narrow > hr {
+  margin: 2rem 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+  text-align: center;
+  border-bottom: .05rem solid #e5e5e5;
+}
+.jumbotron .btn {
+  padding: .75rem 1.5rem;
+  font-size: 1.5rem;
+}
+
+/* Supporting marketing content */
+.marketing {
+  margin: 3rem 0;
+}
+.marketing p + h4 {
+  margin-top: 1.5rem;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 48em) {
+  /* Remove the padding we set earlier */
+  .header,
+  .marketing,
+  .footer {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 2rem;
+  }
+
+  /* Remove the bottom border on the jumbotron for visual effect */
+  .jumbotron {
+    border-bottom: 0;
+  }
+}
+
+/* Customize */
+body {
+  font-family: 'Avenir','Helvetica Neue','Helvetica','Arial','Hiragino Sans','ヒラギノ角ゴシック',YuGothic,'Yu Gothic','メイリオ', Meiryo,'ＭＳ Ｐゴシック','MS PGothic';
+  letter-spacing: 0.05em;
+}
+
+.jumbotron {
+  color: #fff;
+  background-color: #3088D4;
+}
+
+h1{
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1em;
+  text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+}
+
+h1:before {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  display: inline-block;
+  width: 60px;
+  height: 5px;
+  left: 50%;
+  -moz-transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background-color: #ffcc00;
+  border-radius: 2px;
+}
+
+.lead {
+  font-size: 1.1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5em 0;
+  padding: 0 0 0.2em 0;
+  border-bottom: double 5px #ccc;
+}
+
+h3 img {
+  margin: 0 7px 0 0;
+}
+
+p, ul, ol {
+  line-height: 1.5em;
+}
+
+ul li, ol li {
+  margin: 0 0 0.5em 0;
+}
+
+.col-lg-12 {
+  margin: 0 0 1em 0;
+}
+
+.mark, mark {
+  padding: 2px 5px;
+  background-color: #ffcc00;
+}
+
+b, strong {
+  font-weight: normal;
+  color: #ff0000;
+}
+
+i.fa {
+  margin: 0 5px 0 0;
+}
