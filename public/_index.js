@@ -80,7 +80,7 @@ var tootMap = {
         },
         createMarker: function(position, content, icon) {
             content = typeof(content)=="undefined"?null:content;
-            icon = typeof(icon)=="undefined"?"./biwakomap-icon.png":icon;
+            icon = typeof(icon)=="undefined"?"./pin_icon.png":icon;
             var marker = new google.maps.Marker({
                 position: position,
                 map: tootMap.gmap.map,
