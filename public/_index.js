@@ -198,8 +198,10 @@ var tootMap = {
             $("body").on("click", ".status__content__spoiler-link", function() {
                 if ($(".e-content").css("display")=="none") {
                     $(".e-content").show();
+                    $(".status__content__spoiler-link").text("隠す");
                 } else {
                     $(".e-content").hide();
+                    $(".status__content__spoiler-link").text("もっと見る");
                 }
             });
             $("body").on("click", ".media_spoiler", function() {
