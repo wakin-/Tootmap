@@ -4,7 +4,13 @@ var tootMap = {
     before_map_domain: "map.biwakodon.com",
     map_domain: "[MAP_DOMAIN]",
     client_name: "Tootmap",
-    modal_flg: localStorage.getItem('modal_flg') ? localStorage.getItem('modal_flg') : null,
+    modal_flg: null,
+    domain_reg_rule: new RegExp(/^[0-9a-zA-Z\-]+\.[0-9a-zA-Z\-]+$/, 'gi'),
+    tag_reg_rule: new RegExp(/^[\w\u30a0-\u30ff\u3040-\u309f\u30e0-\u9fcf０-ｚ]+$/, 'gi'),
+
+    setModalFlg: function() {
+        this.modal_flg = localStorage.getItem('modal_flg') ? localStorage.getItem('modal_flg') : null;
+    },
 
     // 非同期HTTPリクエスト
     httpRequest: function(url, method, header, data, callback, error) {
@@ -44,9 +50,13 @@ var tootMap = {
                 }
             }
             if (just_marker) {
+                if (this.now_geo_marker) {
+                    this.now_geo_marker.setMap(null);
+                    this.now_geo_marker = null;
+                }
                 google.maps.event.trigger(just_marker, 'click');
             } else {
-                new google.maps.Marker({
+                this.now_geo_marker = new google.maps.Marker({
                     position: this.map.getCenter(),
                     map: this.map,
                     icon: './nowgeo-icon.png'
@@ -113,10 +123,10 @@ var tootMap = {
                 this.markers.forEach(function(marker) {
                     bounds.extend(marker.getPosition());
                 });
-                this.map.fitBounds(bounds);
+                tootMap.gmap.map.fitBounds(bounds);
             }
             if (position_flg) {
-                this.displayPositionMarker(this.map.getCenter());
+                this.displayPositionMarker(tootMap.gmap.map.getCenter());
             }
         },
         clearMarkers: function() {
@@ -158,7 +168,7 @@ var tootMap = {
                 {
                     zoom: tootMap.params.zoom,
                     center: {lat: tootMap.params.lat, lng: tootMap.params.lng},
-                    disableDefaultUI: true,
+                    disableDefaultUI: true
                 }
             );
             this.map.mapTypes.set("simple_map", new google.maps.StyledMapType(
@@ -181,7 +191,7 @@ var tootMap = {
                 }
             });
 
-            this.map.controls[google.maps.ControlPosition.LEFT_TOP] = [tootMap.menuDiv()];
+            this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(tootMap.menuDiv());
             $("body").on("click", "#MenuButton", tootMap.showMenu);
             $("body").on("click", "#MapButton", tootMap.showMap);
         }
@@ -207,7 +217,7 @@ var tootMap = {
             },
             setLastDate: function(last_date) {
                 this.last_date = last_date;
-                $("#past-tagtl").html("過去のトゥートを取得<br />("+tootMap.getFormatDate(last_date)+"以前)");
+                $("#past-tagtl").html("過去のトゥート<br />("+tootMap.getFormatDate(last_date)+"以前)");
             },
             setTag: function(tag) {
                 this.tag = tag;
@@ -359,35 +369,29 @@ var tootMap = {
             tootMap.showMap();
         });
         $("body").on('change', '#domain', function() {
-            if (this.value == tootMap.mstdn.domain) {
-                return;
-            }
-
-            this.value = this.value.replace(/[^0-9a-zA-Z\.\-]/gi, '');
-
-            if (this.value.length > 0) {
-                tootMap.mstdn.setDomain(this.value);
+            var match = this.value.match(tootMap.domain_reg_rule);
+            if (match) {
+                tootMap.mstdn.setDomain(match[0]);
                 tootMap.refresh(true, false);
                 tootMap.showMap();
+                $("#domain-error").remove();
             } else {
-                alert("有効なドメインを入力してください");
-                this.value = tootMap.mstdn.domain;
+                if ($("#domain-error").length==0) {
+                    $("#domain").after("<br /><span id='domain-error'>有効なドメインを入力してください</span>");
+                }
             }
         });
         $("body").on('change', '#tag', function() {
-            if (this.value == tootMap.mstdn.tag) {
-                return;
-            }
-
-            this.value = this.value.replace(/[^\w\u30a0-\u30ff\u3040-\u309f\u30e0-\u9fcf]/gi, '');
-
-            if (this.value.length > 0) {
-                tootMap.mstdn.timeline.setTag(this.value);
+            var match = this.value.match(tootMap.tag_reg_rule);
+            if (match) {
+                tootMap.mstdn.timeline.setTag(match[0]);
                 tootMap.refresh(true, false);
                 tootMap.showMap();
+                $("#tag-error").remove();
             } else {
-                alert("有効なタグを入力してください");
-                this.value = tootMap.mstdn.timeline.tag;
+                if ($("#tag-error").length==0) {
+                    $("#tag").after("<br /><span id='tag-error'>有効なタグを入力してください</span>");
+                }
             }
         });
     },
@@ -404,27 +408,45 @@ var tootMap = {
 
     // GET引数
     params: {
+        query: "",
         lat: null,
         lng: null,
         zoom: null,
         tag: null,
+        flg: false,
+        test: "f",
+
+        setQuery: function(query) {
+            this.query = query;
+        },
 
         _get: function(parameter_name, rule, def_val) {
             def_val = typeof(def_val)=="undefined"?null:def_val;
             var ret = def_val, tmp = [];
-            location.search.substr(1).split("&").forEach(function (item) {
+            this.query.substr(1).split("&").forEach(function (item) {
                 tmp = item.split("=");
-                param = decodeURIComponent(tmp[1]);
-                if (tmp[0] === parameter_name && (typeof(rule) == "undefined" || rule == null || param.match(rule))) ret = param;
+                try {
+                    param = decodeURIComponent(tmp[1]);
+                }  catch(e) {
+                    param = "";
+                }
+                if (tmp[0] === parameter_name && (typeof(rule) == "undefined" || rule == null || param.match(rule))) {
+                    ret = param;
+                }
             });
             return ret;
         },
-        get: function() {
+        all_get() {
             this.lat = parseFloat(this._get('lat', /^\d+\.\d+$/, 35.269452));
             this.lng = parseFloat(this._get('lng', /^\d+\.\d+$/, 136.067194));
             this.zoom = parseInt(this._get('zoom', /^\d+$/, 10));
-            this.tag = this._get('tag', /^[\w\u30a0-\u30ff\u3040-\u309f\u30e0-\u9fcf]+$/, "biwakomap");
-            return this._get('lat')!=null;
+            this.tag = this._get('tag', tootMap.tag_reg_rule, "biwakomap");
+            this.test = this._get('test', /^t$/, "f");
+            this.flg = this._get('lat')!=null;
+        },
+        get: function() {
+            this.setQuery(location.search);
+            return this.all_get();
         }
     },
 
@@ -473,25 +495,43 @@ var tootMap = {
             });
         });
         $("body").on('change', '#modal-domain', function() {
-            this.value = this.value.replace(/[^0-9a-zA-Z\.\-]/gi, '');
-            
-            if (this.value.length > 0) {
-                tootMap.mstdn.setDomain(this.value);
+            var match = this.value.match(tootMap.domain_reg_rule);
+            if (match) {
+                tootMap.mstdn.setDomain(match[0]);
+                $("#modal-domain-error").remove();
             } else {
-                alert("有効なドメインを入力してください");
+                if ($("#modal-domain-error").length==0) {
+                    $("#modal-domain").after("<br /><span id='modal-domain-error'>有効なドメインを入力してください</span>");
+                }
                 this.value = tootMap.mstdn.domain;
             }
         });
         $("body").on('change', '#modal-tag', function() {
-            this.value = this.value.replace(/[^\w\u30a0-\u30ff\u3040-\u309f\u30e0-\u9fcf]/gi, '');
-            
-            if (this.value.length > 0) {
-                tootMap.mstdn.setTag(this.value);
+            var match = this.value.match(tootMap.tag_reg_rule);            
+            if (match) {
+                tootMap.mstdn.timeline.setTag(match[0]);
+                $("#modal-tag-error").remove();
             } else {
-                alert("有効なタグを入力してください");
+                if ($("#modal-tag-error").length==0) {
+                    $("#modal-tag").after("<br /><span id='modal-tag-error'>有効なタグを入力してください</span>");
+                }
                 this.value = tootMap.mstdn.timeline.tag;
             }
         });
+    },
+    modalOrNot: function() {
+        this.setModalFlg();
+        if (!this.modal_flg) {
+            this.displayModal( function() {
+                tootMap.refresh(!tootMap.params.flg, tootMap.params.flg);
+                tootMap.menuInit();
+
+                localStorage.setItem("modal_flg", 1);
+            });
+        } else {
+            this.mstdn.timeline.get(!tootMap.params.flg, tootMap.params.flg);
+            this.menuInit();
+        }
     },
     modalResize: function() {
         var w = $(window).width();
@@ -504,20 +544,25 @@ var tootMap = {
         });
     },
 
-    initialize: function() {
-        var params_flg = this.params.get();
-        this.mstdn.timeline.setTag(this.params.tag);
-        this.gmap.init();
-        if (!this.modal_flg) {
-            this.displayModal(function() {
-                tootMap.refresh(!params_flg, param_flg);
-                tootMap.menuInit();
+    // テスト
+    test: function() {
+        var script = document.createElement('script');
+        script.src = './test.js';
+        document.body.appendChild(script);
+    },
 
-                localStorage.setItem("modal_flg", 1);
-            });
-        } else {
-            this.mstdn.timeline.get(!params_flg, params_flg);
-            this.menuInit();
+    initialize: function() {
+        this.params.get();
+        this.mstdn.timeline.setTag(this.params.tag);
+
+        // テストモード
+        if (this.params.test=="t") {
+            tootMap.test();
+            return;
         }
+
+        this.gmap.init();
+
+        this.modalOrNot();
     }
 };

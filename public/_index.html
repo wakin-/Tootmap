@@ -29,12 +29,12 @@
     </div>
     <div id="map"></div>
     <div id="setting">
-      <a class='btn btn-block btn-light' id='MapButton' href='#'>マップに戻る</a>
-      <a class='btn btn-block btn-light' id='nowgeo' href='#'>現在位置を表示</a>
+      <a class='btn btn-block btn-light' id='MapButton' href='#'>マップ</a>
+      <a class='btn btn-block btn-light' id='nowgeo' href='#'>現在位置</a>
       <div class='btn btn-block btn-light'>https://<input type='text' id='domain' value=''><br />#<input type='text' id='tag' value=''></div>
-      <a class='btn btn-block btn-light' id='past-tagtl' href='#'>過去のトゥートを取得</a>
+      <a class='btn btn-block btn-light' id='past-tagtl' href='#'>過去のトゥート</a>
       <a class='btn btn-block btn-light' id='tagtl' href='#' target='_blank'>タイムライン</a>
-      <a class='btn btn-block btn-light' target='_blank' href='./howtouse.html'>このページについて</a>
+      <a class='btn btn-block btn-light' target='_blank' href='./howtouse.html'>このページ</a>
     </div>
     <div id="loading-bg" ><div id="loading"><img src="./loading.gif" width="80" height="80" alt="Now Loading..." /></div></div>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -42,7 +42,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     <script src="./index.js"></script>
     <script src="./sw.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZcAYOeC2U-f1szMIykGHfUTwki09BSko&amp;callback=tootMap.initialize"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=[GOOGLE_MAP_API_KEY]&amp;callback=tootMap.initialize"></script>
     <script src="https://twemoji.maxcdn.com/2/twemoji.min.js?2.3.0"></script>
   </body>
 </html>
