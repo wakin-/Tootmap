@@ -194,6 +194,19 @@ var tootMap = {
             this.map.controls[google.maps.ControlPosition.LEFT_TOP].push(tootMap.menuDiv());
             $("body").on("click", "#MenuButton", tootMap.showMenu);
             $("body").on("click", "#MapButton", tootMap.showMap);
+
+            $("body").on("click", ".status__content__spoiler-link", function() {
+                if ($(".e-content").css("display")=="none") {
+                    $(".e-content").show();
+                } else {
+                    $(".e-content").hide();
+                }
+            });
+            $("body").on("click", ".media_spoiler", function() {
+                $(".media-item").show();
+                $(".media_spoiler").hide();
+                return false;
+            });
         }
     },
 
@@ -232,13 +245,24 @@ var tootMap = {
             innerHTML: function(toot) {
                 var date = (new Date(toot['created_at'])).toLocaleString();
                 var attachments_html = "";
-                if (toot['media_attachments'].length != '0') {
+                if (toot['media_attachments'].length > 0) {
+                    var attach_display = "";
+                    var media_spoiler = "";
+                    if (toot['sensitive']) {
+                        attach_display = "style='display:none;'";
+                        media_spoiler = '<div class="media-item media_spoiler"><a style="background-image: url(./spoiler.png)" target="_blank" rel="noopener" class="u-photo" href="#"></a></div>';
+                    }
                     attachments_html = '<div class="status__attachments__inner">';
                     toot['media_attachments'].forEach(function(attachment) {
-                        attachments_html += '<div class="media-item">'
-                            +'<a style="background-image: url('+attachment['url']+')" target="_blank" rel="noopener" class="u-photo" href="'+attachment['url']+'"></a></div>';
+                        attachments_html += '<div class="media-item" '+attach_display+'><a style="background-image: url('+attachment['url']+')" target="_blank" rel="noopener" class="u-photo" href="'+attachment['url']+'"></a></div>';
                     });
-                    attachments_html += '</div>';
+                    attachments_html += media_spoiler+'</div>';
+                }
+                var display = "";
+                var spoiler_html  = "";
+                if (toot['spoiler_text'].length > 0) {
+                    display = "style='display:none;'";
+                    spoiler_html = '<p><span class="p-summary">'+twemoji.parse(toot['spoiler_text'])+'</span><a class="status__content__spoiler-link" href="#">もっと見る</a></p>';
                 }
                 html = '<div class="activity-stream activity-stream-headless h-entry"><div class="entry entry-center"><div class="detailed-status light">'
                     +'<a class="detailed-status__display-name p-author h-card" rel="noopener" target="_blank" href="'+toot['account']['url']+'">'
@@ -250,7 +274,10 @@ var tootMap = {
                             +'<span>@'+toot['account']['acct']+'</span>'
                         +'</span>'
                         +'</a>'
-                    +'<div class="status__content p-name emojify"><div class="e-content" style="display: block; direction: ltr" lang="ja"><p>'+twemoji.parse(toot['content'])+'</p></div></div>'
+                    +'<div class="status__content p-name emojify">'
+                        +spoiler_html
+                        +'<div class="e-content" '+display+'><p>'+twemoji.parse(toot['content'])+'</p></div>'
+                    +'</div>'
                     +attachments_html
                     +'<div class="detailed-status__meta">'
                         +'<data class="dt-published" value="'+date+'"></data>'
@@ -343,6 +370,7 @@ var tootMap = {
                     alert("タイムラインを取得できませんでした");
                     tootMap.hideLoader();
                 });
+
                 tootMap.displayLoader();
             },
         },

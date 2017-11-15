@@ -131,6 +131,23 @@ input[type=file] {
     background: transparent;
 }
 
+.status__content__spoiler-link {
+    display: inline-block;
+    border-radius: 2px;
+    border: 0;
+    font-weight: 500;
+    font-size: 11px;
+    padding: 3px 6px;
+    text-transform: uppercase;
+    line-height: inherit;
+    cursor: pointer;
+    color: #fff;
+    background: #b5c3d6;
+}
+.status__content__spoiler-link:hover {
+    color: #fff;    
+}
+
 #loading-bg {
     display:none;
     width:100%;
