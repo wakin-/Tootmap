@@ -470,7 +470,7 @@ var tootMap = {
             this.lat = parseFloat(this._get('lat', /^\d+\.\d+$/, 35.269452));
             this.lng = parseFloat(this._get('lng', /^\d+\.\d+$/, 136.067194));
             this.zoom = parseInt(this._get('zoom', /^\d+$/, 10));
-            this.tag = this._get('tag', tootMap.tag_reg_rule, "biwakomap");
+            this.tag = this._get('tag', tootMap.tag_reg_rule, tootMap.mstdn.timeline.tag);
             this.test = this._get('test', /^t$/, "f");
             this.flg = this._get('lat')!=null;
         },
