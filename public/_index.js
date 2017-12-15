@@ -138,7 +138,8 @@ var tootMap = {
         mappingText: function(latLng) {
             return "https://" + tootMap.map_domain + '?lat=' + latLng.lat() + '&lng=' + latLng.lng()
             + '&zoom=' + tootMap.gmap.map.zoom
-            + '&tag=' + encodeURI(tootMap.mstdn.timeline.tag)
+            + '&tag=' + encodeURIComponent(tootMap.mstdn.timeline.tag)
+            + '&domain=' + encodeURIComponent(tootMap.mstdn.domain)
             + ' #' + tootMap.mstdn.timeline.tag;
         },
         mappingContent: function(latLng) {
@@ -442,6 +443,7 @@ var tootMap = {
         lat: null,
         lng: null,
         zoom: null,
+        domain: null,
         tag: null,
         flg: false,
         test: "f",
@@ -471,6 +473,7 @@ var tootMap = {
             this.lng = parseFloat(this._get('lng', /^\d+\.\d+$/, 136.067194));
             this.zoom = parseInt(this._get('zoom', /^\d+$/, 10));
             this.tag = this._get('tag', tootMap.tag_reg_rule, tootMap.mstdn.timeline.tag);
+            this.domain = this._get('domain', tootMap.domain_reg_rule, tootMap.mstdn.domain);
             this.test = this._get('test', /^t$/, "f");
             this.flg = this._get('lat')!=null;
         },
@@ -583,6 +586,7 @@ var tootMap = {
 
     initialize: function() {
         this.params.get();
+        this.mstdn.setDomain(this.params.domain);
         this.mstdn.timeline.setTag(this.params.tag);
 
         // テストモード
