@@ -5,7 +5,7 @@ var tootMap = {
     map_domain: "[MAP_DOMAIN]",
     client_name: "Tootmap",
     modal_flg: null,
-    domain_reg_rule: new RegExp(/^[0-9a-zA-Z\-]+\.[0-9a-zA-Z\-]+$/, 'gi'),
+    domain_reg_rule: new RegExp(/^[0-9a-zA-Z\-\.]+\.[0-9a-zA-Z\-]+$/, 'gi'),
     tag_reg_rule: new RegExp(/^[\w\u30a0-\u30ff\u3040-\u309f\u30e0-\u9fcf０-ｚ]+$/, 'gi'),
 
     setModalFlg: function() {
