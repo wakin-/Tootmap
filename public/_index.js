@@ -72,7 +72,7 @@ var tootMap = {
                         var zoom = tootMap.gmap.map.zoom < 13 ? 13 : tootMap.gmap.map.zoom;
                         tootMap.gmap.map.setZoom(zoom);
                         tootMap.gmap.map.setCenter(now_geo);
-                        tootMap.gmap.showInfoWindow(now_geo, tootMap.gmap.mappingContent(now_geo));
+                        tootMap.gmap.showShareLink(now_geo);
                     },
                     function (error) {
                         var msg;
@@ -135,6 +135,24 @@ var tootMap = {
             });
             tootMap.gmap.markers = [];
         },
+        showShareLink: function(latlng) {
+            tootMap.gmap.getAddress(latlng);
+        },
+        getAddress: function(latlng) {
+            var address = "";
+            var geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({
+                latLng: latlng
+            }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[2].geometry) {
+                        address = results[2].formatted_address.replace(/^日本、(〒[-0-9]+ )?/, '');
+                    }
+                }
+                tootMap.gmap.showInfoWindow(latlng, tootMap.gmap.mappingContent(latlng, address));
+            });
+        },
         mappingText: function(latLng) {
             return "https://" + tootMap.map_domain + '?lat=' + latLng.lat() + '&lng=' + latLng.lng()
             + '&zoom=' + tootMap.gmap.map.zoom
@@ -142,8 +160,8 @@ var tootMap = {
             + '&domain=' + encodeURIComponent(tootMap.mstdn.domain)
             + ' #' + tootMap.mstdn.timeline.tag;
         },
-        mappingContent: function(latLng) {
-            return "<p><a target='_blank' href='"+"https://"+tootMap.mstdn.domain+"/share?text="+encodeURIComponent("\n"+tootMap.gmap.mappingText(latLng))+"'>この位置についてトゥートする</a></p>";
+        mappingContent: function(latLng, address) {
+            return "<p><a target='_blank' href='"+"https://"+tootMap.mstdn.domain+"/share?text="+encodeURIComponent("\n"+address+" "+tootMap.gmap.mappingText(latLng))+"'>この位置についてトゥートする</a></p>";
         },
         // 情報ウィンドウの表示
         showInfoWindow: function(latLng, content) {
@@ -188,7 +206,8 @@ var tootMap = {
 
             google.maps.event.addListener(this.map, 'click', function(e) {
                 if (tootMap.mstdn_domain!="") {
-                    tootMap.gmap.showInfoWindow(e.latLng, tootMap.gmap.mappingContent(e.latLng));
+                    tootMap.gmap.showShareLink(e.latLng);
+//                    tootMap.gmap.showInfoWindow(e.latLng, tootMap.gmap.mappingContent(e.latLng));
                 }
             });
 
@@ -443,8 +462,8 @@ var tootMap = {
         lat: null,
         lng: null,
         zoom: null,
-        domain: null,
         tag: null,
+        domain: null,        
         flg: false,
         test: "f",
 
