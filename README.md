@@ -3,7 +3,7 @@
 
 [https://tootmap.net/howtouse.html](https://tootmap.net/howtouse.html)
 
-## 利用に必要な情報
+## 利用に必要な情報です
 
 * public/index.html
 
