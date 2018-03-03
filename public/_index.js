@@ -321,7 +321,7 @@ var tootMap = {
             },
             match: function(content) {
                 var match;
-                if (match = content.match(new RegExp("("+tootMap.map_domain+"|"+tootMap.before_map_domain+")/?\\?lat=(\\d+\.\\d+)&amp;lng=(\\d+\.\\d+)(&amp;zoom=(\\d+))?(&amp;tag=(\\w+))?"))) {
+                if (match = content.match(new RegExp("("+tootMap.map_domain+"|"+tootMap.before_map_domain+")/?\\?lat=(\\d+\.\\d+)&amp;lng=(\\d+\.\\d+)(&amp;zoom=(\\d+))?(&amp;tag=(\\w+))?(&amp;domain=(\\w+))?"))) {
                     match['position'] = {lat: parseFloat(match[2]), lng: parseFloat(match[3])};
                     match['zoom'] = parseInt(match[5]);
                     match['tag'] = match[7];
