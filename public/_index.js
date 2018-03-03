@@ -7,6 +7,7 @@ var tootMap = {
     modal_flg: null,
     domain_reg_rule: new RegExp(/^[0-9a-zA-Z\-\.]+\.[0-9a-zA-Z\-]+$/, 'gi'),
     tag_reg_rule: new RegExp(/^[\w\u30a0-\u30ff\u3040-\u309f\u30e0-\u9fcf０-ｚ]+$/, 'gi'),
+    tag_autocomplete: localStorage.getItem('tag_autocomplete') ? localStorage.getItem('tag_autocomplete').split(",") : [],
 
     setModalFlg: function() {
         this.modal_flg = localStorage.getItem('modal_flg') ? localStorage.getItem('modal_flg') : null;
@@ -257,6 +258,10 @@ var tootMap = {
             setTag: function(tag) {
                 this.tag = tag;
                 localStorage.setItem("tag", tag);
+                if (tootMap.tag_autocomplete.indexOf(tag) == -1) {
+                    tootMap.tag_autocomplete.push(tag)
+                    localStorage.setItem("tag_autocomplete", tootMap.tag_autocomplete)
+                }
             },
             clear: function() {
                 this.setMaxId("");
@@ -432,6 +437,7 @@ var tootMap = {
             }
         });
         $("body").on('change', '#tag', function() {
+            $("#tag").autocomplete("close")
             var match = this.value.match(tootMap.tag_reg_rule);
             if (match) {
                 tootMap.mstdn.timeline.setTag(match[0]);
@@ -444,6 +450,9 @@ var tootMap = {
                 }
             }
         });
+        $("#tag").autocomplete({
+            source: tootMap.tag_autocomplete
+        })
     },
 
     refresh: function(bounds_flg, position_flg) {
