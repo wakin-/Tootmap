@@ -7,7 +7,7 @@ var tootMap = {
     modal_flg: null,
     domain_reg_rule: new RegExp(/^[0-9a-zA-Z\-\.]+\.[0-9a-zA-Z\-]+$/, 'gi'),
     tag_reg_rule: new RegExp(/^[\w\u30a0-\u30ff\u3040-\u309f\u30e0-\u9fcf０-ｚ]+$/, 'gi'),
-    tag_autocomplete: localStorage.getItem('tag_autocomplete') ? localStorage.getItem('tag_autocomplete').split(",") : [],
+    tag_autocomplete: localStorage.getItem('tag_autocomplete') ? localStorage.getItem('tag_autocomplete').split(",") : ["biwakomap"],
 
     setModalFlg: function() {
         this.modal_flg = localStorage.getItem('modal_flg') ? localStorage.getItem('modal_flg') : null;
@@ -452,7 +452,34 @@ var tootMap = {
         });
         $("#tag").autocomplete({
             source: tootMap.tag_autocomplete
-        })
+        });
+        $("body").on("click", "#edit-tag-autocomplete", function() {
+            tootMap.showTagList();
+            $("#tag-autocomplete-list").empty();
+            $("#tag-autocomplete-list").append("<div class='btn btn-block btn-light back-to-edit'>戻る</div>");
+            tootMap.tag_autocomplete.forEach(function(tag) {
+                $("#tag-autocomplete-list").append("<div class='btn btn-block btn-light tag-autocomplete-delete'>"+tag+"<li class='fa fa-trash trash-icon'></li></div>");
+            })
+        });
+        $("body").on("click", ".tag-autocomplete-delete", function(event) {
+            target = event.target
+            if (target.className == "fa fa-trash trash-icon") {
+                target = target.parentNode
+            }
+            tag = target.textContent;
+            if (confirm(tag+"を履歴から削除しますか？")) {
+                tootMap.tag_autocomplete.some(function(_tag, i) {
+                    if (_tag == tag) {
+                        tootMap.tag_autocomplete.splice(i, 1);
+                    }
+                });
+                localStorage.setItem("tag_autocomplete", tootMap.tag_autocomplete);
+                $(target).remove();
+            }
+        });
+        $("body").on("click", ".back-to-edit", function() {
+            tootMap.showMenu();
+        });
     },
 
     refresh: function(bounds_flg, position_flg) {
@@ -522,10 +549,17 @@ var tootMap = {
     showMenu: function() {
         $("#map").hide();
         $("#setting").show();
+        $("#tag-autocomplete-list").hide();
     },
     showMap: function() {
         $("#setting").hide();
         $("#map").show();
+        $("#tag-autocomplete-list").hide();
+    },
+    showTagList: function() {
+        $("#map").hide();
+        $("#setting").hide();
+        $("#tag-autocomplete-list").show();
     },
     // 最終取得トゥートの時間を表示
     getFormatDate: function(date) {

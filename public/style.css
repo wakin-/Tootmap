@@ -208,3 +208,7 @@ img.emoji {
 .status__content .invisible {
     display: none;
 }
+
+.trash-icon {
+    padding: 0 0 0 10px;
+}
