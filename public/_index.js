@@ -8,6 +8,8 @@ var tootMap = {
     domain_reg_rule: new RegExp(/^[0-9a-zA-Z\-\.]+\.[0-9a-zA-Z\-]+$/, 'gi'),
     tag_reg_rule: new RegExp(/^[\w\u30a0-\u30ff\u3040-\u309f\u30e0-\u9fcf０-ｚ]+$/, 'gi'),
     tag_autocomplete: localStorage.getItem('tag_autocomplete') ? localStorage.getItem('tag_autocomplete').split(",") : ["biwakomap"],
+    tag_autocomplete_select_flg: false,
+    tag_autocomplete_open_flg: false,
 
     setModalFlg: function() {
         this.modal_flg = localStorage.getItem('modal_flg') ? localStorage.getItem('modal_flg') : null;
@@ -437,7 +439,9 @@ var tootMap = {
             }
         });
         $("body").on('change', '#tag', function() {
-            $("#tag").autocomplete("close")
+            if (tootMap.tag_autocomplete_open_flg) {
+                $("#tag").autocomplete("close")
+            }
             var match = this.value.match(tootMap.tag_reg_rule);
             if (match) {
                 tootMap.mstdn.timeline.setTag(match[0]);
@@ -451,14 +455,28 @@ var tootMap = {
             }
         });
         $("#tag").autocomplete({
-            source: tootMap.tag_autocomplete
+            source: tootMap.tag_autocomplete,
+            open: function() {
+                tootMap.tag_autocomplete_select_flg = false;
+                tootMap.tag_autocomplete_open_flg = true;
+            },
+            select: function(event, ui) {
+                tootMap.tag_autocomplete_select_flg = true;
+            },
+            close: function(event, ui) {
+                tootMap.tag_autocomplete_open_flg = false;
+                if (tootMap.tag_autocomplete_select_flg) {
+                    $('#tag').next().focus()
+                    $('#tag').trigger('change')
+                }
+            }
         });
         $("body").on("click", "#edit-tag-autocomplete", function() {
             tootMap.showTagList();
             $("#tag-autocomplete-list").empty();
-            $("#tag-autocomplete-list").append("<div class='btn btn-block btn-light back-to-edit'>戻る</div>");
+            $("#tag-autocomplete-list").append("<a class='btn btn-block btn-light' id='back-to-edit' href='#'>戻る</a>");
             tootMap.tag_autocomplete.forEach(function(tag) {
-                $("#tag-autocomplete-list").append("<div class='btn btn-block btn-light tag-autocomplete-delete'>"+tag+"<li class='fa fa-trash trash-icon'></li></div>");
+                $("#tag-autocomplete-list").append("<a class='btn btn-block btn-light tag-autocomplete-delete' href='#'>"+tag+"<li class='fa fa-trash trash-icon'></li></a>");
             })
         });
         $("body").on("click", ".tag-autocomplete-delete", function(event) {
@@ -476,8 +494,9 @@ var tootMap = {
                 localStorage.setItem("tag_autocomplete", tootMap.tag_autocomplete);
                 $(target).remove();
             }
+            event.stopPropagation();
         });
-        $("body").on("click", ".back-to-edit", function() {
+        $("body").on("click", "#back-to-edit", function() {
             tootMap.showMenu();
         });
     },
